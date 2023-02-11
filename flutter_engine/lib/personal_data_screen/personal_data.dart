@@ -1,9 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_engine/UI/sbinput.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
 import 'package:flutter_engine/personal_data_screen/bloc/personal_data_bloc.dart';
-import 'package:flutter_engine/repository/hive_counter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 //import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PersonalData extends StatelessWidget {
@@ -31,166 +33,133 @@ class PersonalData extends StatelessWidget {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    TextEditingController controller = TextEditingController();
     return BlocBuilder<PersonalDataBloc, PersonalDataState>(
         builder: (context, state) {
       return Scaffold(
-        backgroundColor: Colors.red.shade700,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(title),
-          automaticallyImplyLeading: false,
           centerTitle: true,
         ),
         body: BlocBuilder<PersonalDataBloc, PersonalDataState>(
           builder: (BuildContext context, PersonalDataState state) {
-            if (state.activeAccount == true) {
-              BlocProvider.of<NavigationCubit>(context).showMainScreen();
+            if (state.proceedToMainScreen == true) {
+              BlocProvider.of<PersonalDataBloc>(context).add(PersonalInit());
+              BlocProvider.of<NavigationCubit>(context).showConfirmAccount();
             }
             return Center(
-              // Center is a layout widget. It takes a single child and positions it
-              // in the middle of the parent.
               child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Column(
-                  // Column is also a layout widget. It takes a list of children and
-                  // arranges them vertically. By default, it sizes itself to fit its
-                  // children horizontally, and tries to be as tall as its parent.
-                  //
-                  // Invoke "debug painting" (press "p" in the console, choose the
-                  // "Toggle Debug Paint" action from the Flutter Inspector in Android
-                  // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-                  // to see the wireframe for each widget.
-                  //
-                  // Column has various properties to control how it sizes itself and
-                  // how it positions its children. Here we use mainAxisAlignment to
-                  // center the children vertically; the main axis here is the vertical
-                  // axis because Columns are vertical (the cross axis would be
-                  // horizontal).
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextField(
-                      decoration: const InputDecoration(
-                          labelText: 'Please enter your namer',
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.white),
-                      onChanged: (String name) {
+                padding: const EdgeInsets.only(left: 25, right: 25),
+                child: SingleChildScrollView(
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10, top: 10),
+                        child: Text(
+                          "Welcome to scrumbits!",
+                          style: TextStyle(
+                            color: Colors.red.shade700,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: RichText(
+                            text: TextSpan(children: [
+                          const TextSpan(
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                              text:
+                                  'Please fill the following fields to register new account. Scrumbits will never send you any spam. By creating an account you are accepting our '),
+                          TextSpan(
+                              style: TextStyle(
+                                color: Colors.red.shade700,
+                                fontSize: 12,
+                              ),
+                              text: 'privacy policy.',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launchUrl(Uri(
+                                      scheme: 'http',
+                                      path: 'www.scrumbits.com'));
+                                })
+                        ])),
+                      ),
+                      sbInput(context,
+                          description: 'Please enter your name:',
+                          hint: 'Thomas Anderson', onChanged: (String name) {
                         context
                             .read<PersonalDataBloc>()
                             .add(UpdateName(name: name));
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    // InternationalPhoneNumberInput(
-                    //   onInputChanged: (PhoneNumber number) {
-                    //     print(number.phoneNumber);
-                    //   },
-                    //   onInputValidated: (bool value) {
-                    //     print(value);
-                    //   },
-                    //   selectorConfig: SelectorConfig(
-                    //     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                    //   ),
-                    //   ignoreBlank: false,
-                    //   autoValidateMode: AutovalidateMode.disabled,
-                    //   selectorTextStyle: TextStyle(color: Colors.black),
-                    //   //initialValue: number,
-                    //   textFieldController: controller,
-                    //   formatInput: true,
-                    //   keyboardType: TextInputType.numberWithOptions(
-                    //       signed: true, decimal: true),
-                    //   inputBorder: OutlineInputBorder(),
-                    //   onSaved: (PhoneNumber number) {
-                    //     print('On Saved: $number');
-                    //   },
-                    // ),
-
-                    // TextField(
-                    //   decoration: const InputDecoration(
-                    //       labelText: 'Please enter your phone number',
-                    //       border: InputBorder.none,
-                    //       hintStyle: TextStyle(color: Colors.red),
-                    //       filled: true,
-                    //       fillColor: Colors.white),
-                    //   onChanged: (String phone) {
-                    //     context
-                    //         .read<PersonalDataBloc>()
-                    //         .add(UpdatePhone(phone: phone));
-                    //   },
-                    //   keyboardType: TextInputType.phone,
-                    // ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Please enter your E-mail',
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.white),
-                      onChanged: (String technologies) {
-                        context.read<PersonalDataBloc>().add(
-                            UpdateTechnologies(technologies: technologies));
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Please enter your password',
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.white),
-                      onChanged: (String experience) {
-                        context.read<PersonalDataBloc>().add(UpdateExperience(
-                            experience: int.parse(experience)));
-                      },
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Please re-enter your password',
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.white),
-                      onChanged: (String experience) {
-                        context.read<PersonalDataBloc>().add(UpdateExperience(
-                            experience: int.parse(experience)));
-                      },
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TextButton(
-                        style: TextButton.styleFrom(primary: Colors.white),
-                        onPressed: () => context
+                      }),
+                      sbInput(context,
+                          description: 'Please enter your phone number:',
+                          hint: '+01 123123123',
+                          keyboardType: TextInputType.phone,
+                          onChanged: (String phone) {
+                        context
                             .read<PersonalDataBloc>()
-                            .add(ButtonPressed()),
-                        child: const Text(
-                          'Submit',
-                          style: TextStyle(fontSize: 20),
-                        )),
-                  ],
+                            .add(UpdatePhone(phone: phone));
+                      }),
+                      sbInput(context,
+                          description: 'Please enter your e-mail address:',
+                          hint: 'thomas.anderson@scrumbits.com',
+                          keyboardType: TextInputType.emailAddress,
+                          onChanged: (String email) {
+                        context
+                            .read<PersonalDataBloc>()
+                            .add(UpdateEmail(email: email));
+                      }),
+                      sbInput(context,
+                          description: 'Please enter your password:',
+                          hint: 'S3cur3Me!',
+                          password: true,
+                          keyboardType: TextInputType.visiblePassword,
+                          onChanged: (String password) {
+                        context
+                            .read<PersonalDataBloc>()
+                            .add(UpdatePassword(password: password));
+                      }),
+                      sbInput(context,
+                          description: 'Please re-enter your password:',
+                          hint: 'S3cur3Me!',
+                          password: true,
+                          keyboardType: TextInputType.visiblePassword,
+                          onChanged: (String password) {
+                        context.read<PersonalDataBloc>().add(
+                            UpdateReenteredPassword(
+                                reenteredPassword: password));
+                      }),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: 100,
+                        child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.red.shade700,
+                            ),
+                            onPressed: () => context
+                                .read<PersonalDataBloc>()
+                                .add(ButtonPressed()),
+                            child: const Text(
+                              'Submit',
+                              style: TextStyle(fontSize: 20),
+                            )),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -199,4 +168,6 @@ class PersonalData extends StatelessWidget {
       );
     });
   }
+
+  void logout() {}
 }

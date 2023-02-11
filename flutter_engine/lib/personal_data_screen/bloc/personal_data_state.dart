@@ -5,27 +5,36 @@ class PersonalDataState extends Equatable {
   final String? name;
   final String? phone;
   final String? email;
-  final int? experience;
+  final String? password;
+  final String? reenteredPassword;
 
-  final bool? activeAccount;
+  final bool? proceedToMainScreen;
 
   const PersonalDataState(
-      {this.name, this.phone, this.email, this.experience, this.activeAccount});
+      {this.name,
+      this.phone,
+      this.email,
+      this.password,
+      this.reenteredPassword,
+      this.proceedToMainScreen});
 
   @override
-  List<Object?> get props => [name, phone, email, experience, activeAccount];
+  List<Object?> get props =>
+      [name, phone, email, password, reenteredPassword, proceedToMainScreen];
 
   PersonalDataState copyState(
       {String? name,
       String? phone,
       String? email,
-      int? experience,
-      bool? activeAccount}) {
+      String? password,
+      String? reenteredPassword,
+      bool? proceedToMainScreen}) {
     return PersonalDataState(
         name: name ?? this.name,
         phone: phone ?? this.phone,
         email: email ?? this.email,
-        experience: experience ?? this.experience,
-        activeAccount: activeAccount ?? this.activeAccount);
+        password: password ?? this.password,
+        reenteredPassword: reenteredPassword ?? this.reenteredPassword,
+        proceedToMainScreen: proceedToMainScreen ?? this.proceedToMainScreen);
   }
 }

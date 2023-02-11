@@ -1,100 +1,109 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_engine/main_screen/bloc/main_bloc.dart';
+import 'package:flutter_engine/main_screen/drawer.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
-import 'package:flutter_engine/navigation/navigation_state.dart';
-import 'package:flutter_engine/personal_data_screen/personal_data.dart';
-import 'package:flutter_engine/repository/hive_counter.dart';
 import 'package:flutter_engine/welcome_screen/bloc/welcome_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Main extends StatelessWidget {
   const Main({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    //return tab1(context);
     return BlocBuilder<WelcomeBloc, WelcomeState>(builder: (context, state) {
       return Scaffold(
-        drawer: Drawer(
-          backgroundColor: Colors.red.shade700,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const [
-              SizedBox(
-                height: 80,
-                child: DrawerHeader(
-                    child: SizedBox(
-                  height: 80,
-                )),
-              ),
-              ListTile(
-                title: Text(
-                  'Settings',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  'Contact us',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.red.shade700,
+        drawer: mainDrawer(context),
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: const Text('Scrumbits'),
+          title: const Text('scrumbits'),
           centerTitle: true,
         ),
-        body: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[],
-          ),
+        body: BlocBuilder<MainBloc, MainState>(
+          builder: (context, state) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      'Looking for new challanges in IT industry?',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      children: [
+                        Text('Press '),
+                        Text(
+                          'BIG RED BUTTON',
+                          style: TextStyle(
+                              color: Colors.red.shade700,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      children: const [
+                        Text('below to '),
+                        Text(
+                          'ACTIVATE',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(' scrumbits'),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  SizedBox(
+                    height: 250,
+                    width: 250,
+                    child: FloatingActionButton.extended(
+                      icon: SvgPicture.asset(
+                        'lib/assets/logo.svg',
+                        height: 150,
+                        color: state.scrumbitsActivated
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        context.read<MainBloc>().add(ScrumbitsPressed());
+                      },
+                      label: const Text(
+                        '',
+                      ),
+                      backgroundColor: Colors.red.shade700,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 70,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      state.scrumbitsActivated
+                          ? 'Current status: ACTIVATED'
+                          : 'Current status: NOT ACTIVE',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(state.scrumbitsActivated
+                      ? 'We will contact you soon!'
+                      : ''),
+                ],
+              ),
+            );
+          },
         ),
       );
     });

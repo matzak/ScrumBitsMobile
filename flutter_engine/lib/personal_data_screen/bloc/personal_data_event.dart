@@ -5,7 +5,7 @@ abstract class PersonalDataEvent {}
 
 class ButtonPressed extends PersonalDataEvent {}
 
-class InitBloc extends PersonalDataEvent {}
+class PersonalInit extends PersonalDataEvent {}
 
 class UpdateName extends PersonalDataEvent {
   final String name;
@@ -19,14 +19,20 @@ class UpdatePhone extends PersonalDataEvent {
   UpdatePhone({required this.phone});
 }
 
-class UpdateTechnologies extends PersonalDataEvent {
-  final String technologies;
+class UpdateEmail extends PersonalDataEvent {
+  final String email;
 
-  UpdateTechnologies({required this.technologies});
+  UpdateEmail({required this.email});
 }
 
-class UpdateExperience extends PersonalDataEvent {
-  final int experience;
+class UpdatePassword extends PersonalDataEvent {
+  final String password;
 
-  UpdateExperience({required this.experience});
+  UpdatePassword({required this.password});
+}
+
+class UpdateReenteredPassword extends PersonalDataEvent {
+  final String reenteredPassword;
+
+  UpdateReenteredPassword({required this.reenteredPassword});
 }

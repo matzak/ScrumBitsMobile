@@ -1,9 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
-import 'package:flutter_engine/navigation/navigation_state.dart';
-import 'package:flutter_engine/repository/hive_counter.dart';
 import 'package:flutter_engine/welcome_screen/bloc/welcome_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -31,7 +28,7 @@ class Welcome extends StatelessWidget {
     // than having to individually change instances of widgets.
     return BlocBuilder<WelcomeBloc, WelcomeState>(builder: (context, state) {
       return Scaffold(
-        backgroundColor: Colors.red.shade700,
+        backgroundColor: Colors.white,
         // appBar: AppBar(
         //   // Here we take the value from the MyHomePage object that was created by
         //   // the App.build method, and use it to set our appbar title.
@@ -57,22 +54,61 @@ class Welcome extends StatelessWidget {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 20),
+              ),
               SvgPicture.asset(
                 'lib/assets/logo.svg',
                 height: 200,
-                color: Colors.white,
+                color: Colors.red.shade700,
               ),
               const SizedBox(
                 height: 100,
               ),
-              TextButton(
-                  style: TextButton.styleFrom(primary: Colors.white),
-                  onPressed: () => BlocProvider.of<NavigationCubit>(context)
-                      .showPersonalData(),
-                  child: const Text(
-                    'Let\'s Start!',
-                    style: TextStyle(fontSize: 20),
-                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.red.shade700,
+                        ),
+                        onPressed: () =>
+                            BlocProvider.of<NavigationCubit>(context)
+                                .showPersonalData(),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Colors.red.shade700,
+                        ),
+                        onPressed: () =>
+                            BlocProvider.of<NavigationCubit>(context)
+                                .showLogin(),
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

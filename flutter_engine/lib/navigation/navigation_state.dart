@@ -1,20 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-class NavigationState extends Equatable {
-  final bool welcomeScreenVisisted;
-  final bool showMainScreen;
+enum Screens { welcome, signup, confirm, login, main }
 
-  const NavigationState(
-      {required this.welcomeScreenVisisted, required this.showMainScreen});
+class NavigationState extends Equatable {
+  final Screens showScreen;
+
+  const NavigationState({required this.showScreen});
 
   @override
-  List<Object?> get props => [welcomeScreenVisisted, showMainScreen];
+  List<Object?> get props => [showScreen];
 
-  NavigationState copyState(
-      {bool? welcomeScreenVisisted, bool? showMainScreen}) {
-    return NavigationState(
-        welcomeScreenVisisted:
-            welcomeScreenVisisted ?? this.welcomeScreenVisisted,
-        showMainScreen: showMainScreen ?? this.showMainScreen);
+  NavigationState copyState({required Screens showScreen}) {
+    return NavigationState(showScreen: showScreen);
   }
 }

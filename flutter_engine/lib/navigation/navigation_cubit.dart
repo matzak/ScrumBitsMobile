@@ -2,19 +2,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/navigation/navigation_state.dart';
 
 class NavigationCubit extends Cubit<NavigationState> {
-  NavigationCubit()
-      : super(const NavigationState(
-            welcomeScreenVisisted: false, showMainScreen: false));
+  NavigationCubit() : super(const NavigationState(showScreen: Screens.welcome));
 
   void showPersonalData() {
-    emit(state.copyState(welcomeScreenVisisted: true));
+    emit(state.copyState(showScreen: Screens.signup));
+  }
+
+  void showConfirmAccount() {
+    emit(state.copyState(showScreen: Screens.confirm));
   }
 
   void showMainScreen() {
-    emit(state.copyState(showMainScreen: true));
+    emit(state.copyState(showScreen: Screens.main));
   }
 
-  void popToWelcome() {
-    emit(state.copyState(welcomeScreenVisisted: false));
+  void showLogin() {
+    emit(state.copyState(showScreen: Screens.login));
+  }
+
+  void logout() {
+    emit(state.copyState(showScreen: Screens.welcome));
   }
 }
