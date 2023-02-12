@@ -36,24 +36,12 @@ class LoginBloc extends Bloc<PersonalDataEvent, LoginState> {
 
           emit(state.copyState(activeAccount: true, activated: activated));
         }
-      } on CognitoUserNewPasswordRequiredException catch (e) {
-        print('KURWA1 $e');
-      } on CognitoUserMfaRequiredException catch (e) {
-        print('KURWA2 $e');
-      } on CognitoUserSelectMfaTypeException catch (e) {
-        print('KURWA3 $e');
-      } on CognitoUserMfaSetupException catch (e) {
-        print('KURWA4 $e');
-      } on CognitoUserTotpRequiredException catch (e) {
-        print('KURWA5 $e');
-      } on CognitoUserCustomChallengeException catch (e) {
-        print('KURWA6 $e');
-      } on CognitoUserConfirmationNecessaryException catch (e) {
-        print('KURWA7 $e');
-      } on CognitoClientException catch (e) {
-        print('KURWA8 $e');
       } catch (e) {
-        print('KURWAXXX $e');
+        try {
+          emit(state.copyState(errorString: (e as dynamic).message));
+        } catch (_) {
+          emit(state.copyState(errorString: 'Unknown error.'));
+        }
       }
     });
 

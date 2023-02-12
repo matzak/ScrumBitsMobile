@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum Screens { welcome, signup, confirm, login, main }
+enum Screens { welcome, signup, confirm, login, main, settings }
 
 class NavigationState extends Equatable {
   final Screens showScreen;

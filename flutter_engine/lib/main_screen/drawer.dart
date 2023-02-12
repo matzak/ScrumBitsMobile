@@ -5,15 +5,14 @@ import 'package:flutter_engine/repository/global_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 _displayContactDialog(BuildContext context) async {
-  // https://pub.dev/packages/url_launcher
   await showDialog(
     context: context,
     builder: (BuildContext context) {
       return Expanded(
         child: SimpleDialog(
-          title: const Text(
+          title: Text(
             'Contact scrumbits',
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red.shade700),
           ),
           children: [
             SimpleDialogOption(
@@ -62,7 +61,7 @@ Drawer mainDrawer(BuildContext context) {
           ),
           onTap: () {
             Navigator.pop(context, false);
-            BlocProvider.of<NavigationCubit>(context).showMainScreen();
+            BlocProvider.of<NavigationCubit>(context).showSettings();
           },
         ),
         ListTile(

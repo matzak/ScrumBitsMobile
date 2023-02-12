@@ -7,6 +7,8 @@ class ButtonPressed extends PersonalDataEvent {}
 
 class PersonalInit extends PersonalDataEvent {}
 
+class ClearError extends PersonalDataEvent {}
+
 class UpdateName extends PersonalDataEvent {
   final String name;
 

@@ -6,6 +6,7 @@ import 'package:flutter_engine/main_screen/main.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
 import 'package:flutter_engine/navigation/navigation_state.dart';
 import 'package:flutter_engine/personal_data_screen/personal_data.dart';
+import 'package:flutter_engine/settings/settings.dart';
 import 'package:flutter_engine/welcome_screen/welcome.dart';
 
 class AppNavigator extends StatelessWidget {
@@ -34,6 +35,11 @@ class AppNavigator extends StatelessWidget {
         ];
       case Screens.main:
         return [const MaterialPage(child: Main(title: 'scrumbits'))];
+      case Screens.settings:
+        return [
+          const MaterialPage(child: Main(title: 'scrumbits')),
+          const MaterialPage(child: Settings(title: 'Settings'))
+        ];
     }
   }
 
@@ -44,7 +50,10 @@ class AppNavigator extends StatelessWidget {
         return Navigator(
           pages: _getPages(state, context),
           onPopPage: (route, result) {
-            BlocProvider.of<NavigationCubit>(context).logout();
+            NavigationCubit bloc = context.read<NavigationCubit>();
+            if (bloc.state.showScreen == Screens.settings) {
+              bloc.showMainScreen();
+            }
             return route.didPop(result);
           },
         );

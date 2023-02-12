@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter_engine/repository/global_repository.dart';
+import 'package:libphonenumber/libphonenumber.dart';
 
 part 'personal_data_event.dart';
 part 'personal_data_state.dart';
@@ -10,6 +11,40 @@ part 'personal_data_state.dart';
 class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
   PersonalDataBloc() : super(const PersonalDataState()) {
     on<ButtonPressed>((event, emit) async {
+      final bool emailValid = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(state.email ?? '');
+
+      if ((state.name ?? '').isEmpty) {
+        emit(state.copyState(
+            proceedToMainScreen: false,
+            errorString: 'Please enter your name.'));
+        return;
+      }
+
+      bool? isPhoneValid = await PhoneNumberUtil.isValidPhoneNumber(
+          phoneNumber: state.phone ?? '', isoCode: 'US');
+
+      if (isPhoneValid == false) {
+        emit(state.copyState(
+            proceedToMainScreen: false,
+            errorString:
+                'Invalid phone number. Please make sure that there is country code at the beggining.'));
+        return;
+      }
+
+      if (emailValid == false) {
+        emit(state.copyState(
+            proceedToMainScreen: false, errorString: 'Invalid email address.'));
+        return;
+      }
+
+      if (state.password != state.reenteredPassword) {
+        emit(state.copyState(
+            proceedToMainScreen: false, errorString: 'Password mismatch.'));
+        return;
+      }
+
       final userAttributes = [
         AttributeArg(name: 'name', value: state.name),
         AttributeArg(name: 'phone_number', value: state.phone),
@@ -28,9 +63,19 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
 
         emit(state.copyState(proceedToMainScreen: true));
       } catch (e) {
-        print("KURWA $e");
-        emit(state.copyState(proceedToMainScreen: false));
+        try {
+          String message = (e as dynamic).message;
+          emit(state.copyState(
+              proceedToMainScreen: false, errorString: message));
+        } catch (_) {
+          emit(state.copyState(
+              proceedToMainScreen: false, errorString: 'Unknown error.'));
+        }
       }
+    });
+
+    on<ClearError>((event, emit) async {
+      emit(state.copyState(errorString: null));
     });
 
     on<PersonalInit>((event, emit) async {
@@ -54,7 +99,7 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
     });
 
     on<UpdateReenteredPassword>((event, emit) async {
-      emit(state.copyState(password: event.reenteredPassword));
+      emit(state.copyState(reenteredPassword: event.reenteredPassword));
     });
   }
 }

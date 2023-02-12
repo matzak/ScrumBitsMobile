@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/UI/SBColors.dart';
 import 'package:flutter_engine/navigation/app_navigator.dart';
+import 'package:flutter_engine/settings/bloc/settings_bloc.dart';
 import 'package:flutter_engine/welcome_screen/bloc/welcome_bloc.dart';
 import 'package:flutter_engine/personal_data_screen/bloc/personal_data_bloc.dart';
 import 'confirm_account/bloc/confirm_account_bloc.dart';
@@ -50,11 +51,18 @@ void main() async {
         },
         child: const MyApp(),
       ),
+      BlocProvider(
+        lazy: false,
+        create: (BuildContext context) {
+          return SettingsBloc()..add(SettingsInit());
+        },
+        child: const MyApp(),
+      ),
     ],
     child: BlocProvider(
       lazy: false,
       create: (BuildContext context) {
-        return WelcomeBloc()..add(WelcomeInit());
+        return MainBloc()..add(MainInit());
       },
       child: const MyApp(),
     ),

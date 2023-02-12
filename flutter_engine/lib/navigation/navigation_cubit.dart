@@ -23,4 +23,8 @@ class NavigationCubit extends Cubit<NavigationState> {
   void logout() {
     emit(state.copyState(showScreen: Screens.welcome));
   }
+
+  void showSettings() {
+    emit(state.copyState(showScreen: Screens.settings));
+  }
 }

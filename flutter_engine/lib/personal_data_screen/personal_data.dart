@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/UI/sbinput.dart';
+import 'package:flutter_engine/UI/sbpopup.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
 import 'package:flutter_engine/personal_data_screen/bloc/personal_data_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -48,6 +49,16 @@ class PersonalData extends StatelessWidget {
             if (state.proceedToMainScreen == true) {
               BlocProvider.of<PersonalDataBloc>(context).add(PersonalInit());
               BlocProvider.of<NavigationCubit>(context).showConfirmAccount();
+            }
+            if (state.errorString != null) {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                sbDisplayDialog(context,
+                    title: 'Login error',
+                    message: state.errorString,
+                    option1Text: 'OK', option1Action: () {
+                  context.read<PersonalDataBloc>().add(ClearError());
+                });
+              });
             }
             return Center(
               child: Padding(

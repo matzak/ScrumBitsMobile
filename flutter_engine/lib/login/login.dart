@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/UI/sbinput.dart';
+import 'package:flutter_engine/UI/sbpopup.dart';
 import 'package:flutter_engine/login/bloc/login_bloc.dart';
 import 'package:flutter_engine/main_screen/bloc/main_bloc.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
@@ -15,7 +16,6 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -32,6 +32,14 @@ class Login extends StatelessWidget {
                     .add(MainInit(activated: true));
               }
               BlocProvider.of<NavigationCubit>(context).showMainScreen();
+            }
+            if (state.errorString != null) {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                sbDisplayDialog(context,
+                    title: 'Login error',
+                    message: state.errorString,
+                    option1Text: 'OK');
+              });
             }
             return Center(
               child: Padding(

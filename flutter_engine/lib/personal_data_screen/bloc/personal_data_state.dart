@@ -7,6 +7,7 @@ class PersonalDataState extends Equatable {
   final String? email;
   final String? password;
   final String? reenteredPassword;
+  final String? errorString;
 
   final bool? proceedToMainScreen;
 
@@ -16,11 +17,19 @@ class PersonalDataState extends Equatable {
       this.email,
       this.password,
       this.reenteredPassword,
-      this.proceedToMainScreen});
+      this.proceedToMainScreen,
+      this.errorString});
 
   @override
-  List<Object?> get props =>
-      [name, phone, email, password, reenteredPassword, proceedToMainScreen];
+  List<Object?> get props => [
+        name,
+        phone,
+        email,
+        password,
+        reenteredPassword,
+        proceedToMainScreen,
+        errorString
+      ];
 
   PersonalDataState copyState(
       {String? name,
@@ -28,13 +37,15 @@ class PersonalDataState extends Equatable {
       String? email,
       String? password,
       String? reenteredPassword,
-      bool? proceedToMainScreen}) {
+      bool? proceedToMainScreen,
+      String? errorString}) {
     return PersonalDataState(
         name: name ?? this.name,
         phone: phone ?? this.phone,
         email: email ?? this.email,
         password: password ?? this.password,
         reenteredPassword: reenteredPassword ?? this.reenteredPassword,
-        proceedToMainScreen: proceedToMainScreen ?? this.proceedToMainScreen);
+        proceedToMainScreen: proceedToMainScreen ?? this.proceedToMainScreen,
+        errorString: errorString);
   }
 }
