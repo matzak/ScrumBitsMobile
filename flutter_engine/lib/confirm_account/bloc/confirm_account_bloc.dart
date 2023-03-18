@@ -17,6 +17,8 @@ class ConfirmAccountBloc
           bool confirmed = await GlobalRepository.cognitoUser!
               .confirmRegistration(state.code ?? '');
           if (confirmed) {
+            GlobalRepository.login(
+                GlobalRepository.email, GlobalRepository.password);
             emit(state.copyState(activeAccount: true));
           }
         } else {

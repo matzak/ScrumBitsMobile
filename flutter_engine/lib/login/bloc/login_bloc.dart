@@ -10,20 +10,10 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<PersonalDataEvent, LoginState> {
   LoginBloc() : super(const LoginState()) {
     on<ButtonPressed>((event, emit) async {
-      GlobalRepository.cognitoUser =
-          CognitoUser(state.email, GlobalRepository.userPool);
-      final authDetails = AuthenticationDetails(
-        username: state.email,
-        password: state.password,
-      );
-
       try {
-        GlobalRepository.cognitoSession =
-            await GlobalRepository.cognitoUser!.authenticateUser(authDetails);
-        bool activated = true;
+        bool activated =
+            await GlobalRepository.login(state.email, state.password);
         if (GlobalRepository.cognitoSession != null) {
-          GlobalRepository.attributes =
-              await GlobalRepository.cognitoUser!.getUserAttributes();
           if (GlobalRepository.attributes != null) {
             GlobalRepository.attributes?.firstWhere((attribute) {
               return attribute.name == 'nickname' &&

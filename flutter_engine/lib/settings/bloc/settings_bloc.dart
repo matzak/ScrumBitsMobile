@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:flutter_engine/repository/global_repository.dart';
+import 'package:libphonenumber/libphonenumber.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
@@ -27,6 +28,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     });
 
     on<UpdatePhonePressed>((event, emit) async {
+      bool? isPhoneValid = await PhoneNumberUtil.isValidPhoneNumber(
+          phoneNumber: state.phone ?? '', isoCode: 'US');
+
+      if (isPhoneValid == false) {
+        emit(state.copyState(
+            messageString:
+                'Invalid phone number. Please make sure that there is country code at the beggining.'));
+        return;
+      }
+
       final List<CognitoUserAttribute> attributes = [];
       attributes
           .add(CognitoUserAttribute(name: 'phone_number', value: state.phone));

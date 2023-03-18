@@ -60,6 +60,8 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
 
         GlobalRepository.cognitoUser =
             CognitoUser(state.email, GlobalRepository.userPool);
+        GlobalRepository.email = state.email;
+        GlobalRepository.password = state.password;
 
         emit(state.copyState(proceedToMainScreen: true));
       } catch (e) {
