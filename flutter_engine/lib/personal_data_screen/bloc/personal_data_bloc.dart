@@ -45,6 +45,8 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
         return;
       }
 
+      emit(state.copyState(processing: true));
+
       final userAttributes = [
         AttributeArg(name: 'name', value: state.name),
         AttributeArg(name: 'phone_number', value: state.phone),
@@ -63,16 +65,21 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
         GlobalRepository.email = state.email;
         GlobalRepository.password = state.password;
 
-        emit(state.copyState(proceedToMainScreen: true));
+        emit(state.copyState(proceedToMainScreen: true, processing: false));
       } catch (e) {
         try {
           String message = (e as dynamic).message;
           emit(state.copyState(
-              proceedToMainScreen: false, errorString: message));
+            proceedToMainScreen: false,
+            errorString: message,
+            processing: false,
+          ));
         } catch (exception) {
           emit(state.copyState(
-              proceedToMainScreen: false,
-              errorString: 'Unknown error $exception'));
+            proceedToMainScreen: false,
+            errorString: 'Unknown error $exception',
+            processing: false,
+          ));
         }
       }
     });

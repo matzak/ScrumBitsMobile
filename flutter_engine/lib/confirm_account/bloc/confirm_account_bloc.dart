@@ -11,21 +11,20 @@ class ConfirmAccountBloc
   ConfirmAccountBloc() : super(const ConfirmAccountState()) {
     on<ButtonPressed>((event, emit) async {
       try {
-        print('JA JEBIE $GlobalRepository.cognitoUser');
-        print('CODE ${state.code}');
+        emit(state.copyState(processing: true));
         if (state.code != null && GlobalRepository.cognitoUser != null) {
           bool confirmed = await GlobalRepository.cognitoUser!
               .confirmRegistration(state.code ?? '');
           if (confirmed) {
             GlobalRepository.login(
                 GlobalRepository.email, GlobalRepository.password);
-            emit(state.copyState(activeAccount: true));
+            emit(state.copyState(activeAccount: true, processing: false));
           }
         } else {
-          print('BLADY CHUJ!');
+          emit(state.copyState(processing: false));
         }
       } catch (e) {
-        print('KURWA $e');
+        emit(state.copyState(processing: false));
       }
     });
 

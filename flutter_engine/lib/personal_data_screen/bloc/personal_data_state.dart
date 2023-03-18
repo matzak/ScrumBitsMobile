@@ -10,15 +10,18 @@ class PersonalDataState extends Equatable {
   final String? errorString;
 
   final bool? proceedToMainScreen;
+  final bool? processing;
 
-  const PersonalDataState(
-      {this.name,
-      this.phone,
-      this.email,
-      this.password,
-      this.reenteredPassword,
-      this.proceedToMainScreen,
-      this.errorString});
+  const PersonalDataState({
+    this.name,
+    this.phone,
+    this.email,
+    this.password,
+    this.reenteredPassword,
+    this.proceedToMainScreen,
+    this.errorString,
+    this.processing,
+  });
 
   @override
   List<Object?> get props => [
@@ -28,24 +31,29 @@ class PersonalDataState extends Equatable {
         password,
         reenteredPassword,
         proceedToMainScreen,
-        errorString
+        errorString,
+        processing
       ];
 
-  PersonalDataState copyState(
-      {String? name,
-      String? phone,
-      String? email,
-      String? password,
-      String? reenteredPassword,
-      bool? proceedToMainScreen,
-      String? errorString}) {
+  PersonalDataState copyState({
+    String? name,
+    String? phone,
+    String? email,
+    String? password,
+    String? reenteredPassword,
+    bool? proceedToMainScreen,
+    String? errorString,
+    bool? processing,
+  }) {
     return PersonalDataState(
-        name: name ?? this.name,
-        phone: phone ?? this.phone,
-        email: email ?? this.email,
-        password: password ?? this.password,
-        reenteredPassword: reenteredPassword ?? this.reenteredPassword,
-        proceedToMainScreen: proceedToMainScreen ?? this.proceedToMainScreen,
-        errorString: errorString);
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      reenteredPassword: reenteredPassword ?? this.reenteredPassword,
+      proceedToMainScreen: proceedToMainScreen ?? this.proceedToMainScreen,
+      errorString: errorString,
+      processing: processing ?? this.processing,
+    );
   }
 }

@@ -10,6 +10,7 @@ class SettingsState extends Equatable {
   final bool? accountRemoved;
   final String? messageString;
   final bool? deleteAccountDialog;
+  final bool? processing;
 
   const SettingsState({
     this.currentPassword,
@@ -19,6 +20,7 @@ class SettingsState extends Equatable {
     this.accountRemoved,
     this.messageString,
     this.deleteAccountDialog,
+    this.processing,
   });
 
   @override
@@ -29,7 +31,8 @@ class SettingsState extends Equatable {
         phone,
         accountRemoved,
         messageString,
-        deleteAccountDialog
+        deleteAccountDialog,
+        processing,
       ];
 
   SettingsState copyState({
@@ -40,6 +43,7 @@ class SettingsState extends Equatable {
     bool? accountRemoved,
     String? messageString,
     bool? deleteAccountDialog,
+    bool? processing,
   }) {
     return SettingsState(
       currentPassword: currentPassword ?? this.currentPassword,
@@ -49,6 +53,7 @@ class SettingsState extends Equatable {
       accountRemoved: accountRemoved ?? this.accountRemoved,
       messageString: messageString,
       deleteAccountDialog: deleteAccountDialog ?? false,
+      processing: processing ?? this.processing,
     );
   }
 }

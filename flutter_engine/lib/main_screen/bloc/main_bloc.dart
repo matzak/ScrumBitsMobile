@@ -8,11 +8,7 @@ part 'main_event.dart';
 part 'main_state.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> {
-  MainBloc() : super(MainState()) {
-    // on<ButtonPressed>((event, emit) async {
-
-    // });
-
+  MainBloc() : super(const MainState()) {
     on<ScrumbitsPressed>((event, emit) async {
       bool newState = !state.scrumbitsActivated;
       final List<CognitoUserAttribute> attributes = [];
@@ -21,15 +17,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       try {
         await GlobalRepository.cognitoUser!.updateAttributes(attributes);
-        emit(state.copyState(scrumbitsActivated: newState));
+        emit(state.copyState(scrumbitsActivated: newState, processing: false));
       } catch (e) {
+        emit(state.copyState(processing: false));
         print(e);
       }
     });
 
     on<MainInit>((event, emit) async {
-      //final counter = await repository.loadCounter();
       emit(state.copyState(scrumbitsActivated: event.activated));
+    });
+
+    on<ShowProcessing>((event, emit) async {
+      emit(state.copyState(processing: true));
     });
   }
 }

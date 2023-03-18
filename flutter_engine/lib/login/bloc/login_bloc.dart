@@ -10,6 +10,7 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<PersonalDataEvent, LoginState> {
   LoginBloc() : super(const LoginState()) {
     on<ButtonPressed>((event, emit) async {
+      emit(state.copyState(processing: true));
       try {
         bool activated =
             await GlobalRepository.login(state.email, state.password);
@@ -24,13 +25,16 @@ class LoginBloc extends Bloc<PersonalDataEvent, LoginState> {
             });
           }
 
-          emit(state.copyState(activeAccount: true, activated: activated));
+          emit(state.copyState(
+              activeAccount: true, activated: activated, processing: false));
         }
       } catch (e) {
         try {
-          emit(state.copyState(errorString: (e as dynamic).message));
+          emit(state.copyState(
+              errorString: (e as dynamic).message, processing: false));
         } catch (_) {
-          emit(state.copyState(errorString: 'Unknown error.'));
+          emit(state.copyState(
+              errorString: 'Unknown error.', processing: false));
         }
       }
     });

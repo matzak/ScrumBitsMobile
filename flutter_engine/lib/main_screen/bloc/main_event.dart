@@ -10,3 +10,5 @@ class MainInit extends MainEvent {
 }
 
 class ScrumbitsPressed extends MainEvent {}
+
+class ShowProcessing extends MainEvent {}
