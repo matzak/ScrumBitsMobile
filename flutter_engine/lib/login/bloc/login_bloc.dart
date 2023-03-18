@@ -22,10 +22,10 @@ class LoginBloc extends Bloc<PersonalDataEvent, LoginState> {
             await GlobalRepository.cognitoUser!.authenticateUser(authDetails);
         bool activated = true;
         if (GlobalRepository.cognitoSession != null) {
-          List<CognitoUserAttribute>? attributes =
+          GlobalRepository.attributes =
               await GlobalRepository.cognitoUser!.getUserAttributes();
-          if (attributes != null) {
-            attributes.firstWhere((attribute) {
+          if (GlobalRepository.attributes != null) {
+            GlobalRepository.attributes?.firstWhere((attribute) {
               return attribute.name == 'nickname' &&
                   attribute.value == 'ACTIVATED';
             }, orElse: () {

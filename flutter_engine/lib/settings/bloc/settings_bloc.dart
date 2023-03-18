@@ -34,13 +34,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       try {
         await GlobalRepository.cognitoUser!.updateAttributes(attributes);
         emit(state.copyState(messageString: 'Phone number updated'));
+        GlobalRepository.setPhoneNumber(state.phone);
         print('PHONE UPDATED');
       } catch (e) {
         print(e);
       }
     });
 
-    on<DeleteAccountPressed>((event, emit) async {
+    on<DeleteAccountConfirmed>((event, emit) async {
       bool userDeleted = false;
       try {
         userDeleted = await GlobalRepository.cognitoUser!.deleteUser();
@@ -49,6 +50,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         print(e);
       }
       print(userDeleted);
+    });
+
+    on<DeleteAccountPressed>((event, emit) async {
+      emit(state.copyState(deleteAccountDialog: true));
     });
 
     on<SettingsInit>((event, emit) async {
@@ -69,6 +74,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     on<UpdatePhone>((event, emit) async {
       emit(state.copyState(phone: event.phone));
+    });
+
+    on<DialogOKPressed>((event, emit) async {
+      emit(state.copyState(messageString: null));
     });
   }
 }

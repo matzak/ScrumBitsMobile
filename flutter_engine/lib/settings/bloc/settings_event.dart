@@ -11,6 +11,8 @@ class RemovePopup extends SettingsEvent {}
 
 class DeleteAccountPressed extends SettingsEvent {}
 
+class DeleteAccountConfirmed extends SettingsEvent {}
+
 class SettingsInit extends SettingsEvent {}
 
 class UpdateCurrentPassword extends SettingsEvent {
@@ -36,3 +38,5 @@ class UpdatePhone extends SettingsEvent {
 
   UpdatePhone({required this.phone});
 }
+
+class DialogOKPressed extends SettingsEvent {}

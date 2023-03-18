@@ -71,7 +71,7 @@ class Main extends StatelessWidget {
                     width: 250,
                     child: FloatingActionButton.extended(
                       icon: SvgPicture.asset(
-                        'lib/assets/logo.svg',
+                        'lib/assets/logo_notext.svg',
                         height: 150,
                         color: state.scrumbitsActivated
                             ? Colors.black

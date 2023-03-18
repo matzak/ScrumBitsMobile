@@ -2,7 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/UI/sbinput.dart';
+import 'package:flutter_engine/UI/sbpopup.dart';
 import 'package:flutter_engine/login/bloc/login_bloc.dart';
+import 'package:flutter_engine/navigation/navigation_cubit.dart';
+import 'package:flutter_engine/repository/global_repository.dart';
 import 'package:flutter_engine/settings/bloc/settings_bloc.dart';
 
 class Settings extends StatelessWidget {
@@ -12,15 +15,45 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+    return BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(title),
           centerTitle: true,
         ),
-        body: BlocBuilder<LoginBloc, LoginState>(
-          builder: (BuildContext context, LoginState state) {
+        body: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (BuildContext context, SettingsState state) {
+            if (state.accountRemoved == true) {
+              BlocProvider.of<NavigationCubit>(context).logout();
+            }
+            if (state.messageString != null) {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                sbDisplayDialog(context,
+                    title: 'Settings',
+                    message: state.messageString,
+                    option1Text: 'OK', option1Action: () {
+                  context.read<SettingsBloc>().add(DialogOKPressed());
+                });
+              });
+            } else if (state.deleteAccountDialog == true) {
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                sbDisplayDialog(context,
+                    title: 'Delete account',
+                    message:
+                        'Are you sure that you want to delete scrumbits account?',
+                    option1Text: 'Yes',
+                    option1Action: () {
+                      context
+                          .read<SettingsBloc>()
+                          .add(DeleteAccountConfirmed());
+                    },
+                    option2Text: 'Cancel',
+                    option2Action: () {
+                      context.read<SettingsBloc>().add(DialogOKPressed());
+                    });
+              });
+            }
             return Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
@@ -81,15 +114,18 @@ class Settings extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    sbInput(context,
-                        description: 'Phone number:',
-                        hint: '+01 123123123',
-                        keyboardType: TextInputType.phone,
-                        onChanged: (String phone) {
-                      context
-                          .read<SettingsBloc>()
-                          .add(UpdatePhone(phone: phone));
-                    }),
+                    sbInput(
+                      context,
+                      description: 'Phone number:',
+                      hint: '+01 123123123',
+                      keyboardType: TextInputType.phone,
+                      onChanged: (String phone) {
+                        context
+                            .read<SettingsBloc>()
+                            .add(UpdatePhone(phone: phone));
+                      },
+                      initalText: GlobalRepository.getPhoneNumber(),
+                    ),
                     SizedBox(
                       width: 180,
                       child: TextButton(

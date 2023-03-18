@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-Widget sbInput(BuildContext context,
-    {String? description,
-    String? hint,
-    Function(String)? onChanged,
-    TextInputType? keyboardType,
-    bool password = false}) {
+Widget sbInput(
+  BuildContext context, {
+  String? description,
+  String? hint,
+  Function(String)? onChanged,
+  TextInputType? keyboardType,
+  bool password = false,
+  String? initalText,
+}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,6 +25,7 @@ Widget sbInput(BuildContext context,
         ),
       ),
       TextFormField(
+        initialValue: initalText,
         keyboardType: keyboardType,
         obscureText: password,
         enableSuggestions: !password,

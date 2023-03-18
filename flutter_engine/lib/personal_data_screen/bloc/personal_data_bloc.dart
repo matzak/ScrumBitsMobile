@@ -67,9 +67,10 @@ class PersonalDataBloc extends Bloc<PersonalDataEvent, PersonalDataState> {
           String message = (e as dynamic).message;
           emit(state.copyState(
               proceedToMainScreen: false, errorString: message));
-        } catch (_) {
+        } catch (exception) {
           emit(state.copyState(
-              proceedToMainScreen: false, errorString: 'Unknown error.'));
+              proceedToMainScreen: false,
+              errorString: 'Unknown error $exception'));
         }
       }
     });
