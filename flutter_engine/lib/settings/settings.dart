@@ -124,7 +124,7 @@ class Settings extends StatelessWidget {
                             .read<SettingsBloc>()
                             .add(UpdatePhone(phone: phone));
                       },
-                      initalText: GlobalRepository.getPhoneNumber(),
+                      initalText: state.phone,
                     ),
                     SizedBox(
                       width: 180,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_engine/navigation/navigation_cubit.dart';
 import 'package:flutter_engine/repository/global_repository.dart';
+import 'package:flutter_engine/settings/bloc/settings_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 _displayContactDialog(BuildContext context) async {
@@ -61,6 +62,7 @@ Drawer mainDrawer(BuildContext context) {
           ),
           onTap: () {
             Navigator.pop(context, false);
+            BlocProvider.of<SettingsBloc>(context).add(SettingsInit());
             BlocProvider.of<NavigationCubit>(context).showSettings();
           },
         ),

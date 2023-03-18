@@ -23,7 +23,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           print('PASSWORD CHANGED!');
         }
       } catch (e) {
-        print(e);
+        emit(state.copyState(messageString: "Password change failed!"));
       }
     });
 
@@ -68,7 +68,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     });
 
     on<SettingsInit>((event, emit) async {
-      emit(const SettingsState(accountRemoved: false));
+      emit(SettingsState(
+          accountRemoved: false, phone: GlobalRepository.getPhoneNumber()));
     });
 
     on<UpdateCurrentPassword>((event, emit) async {
